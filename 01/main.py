@@ -8,10 +8,9 @@ print(expenses)
 
 year = 2020
 
-for i in range(len(expenses)):
-    basis = expenses[i]
+while (len(expenses)>0):
+    basis = expenses.pop()
     exp_set = set(expenses)
-    exp_set.remove(basis)
     howmuch = year - basis
     while len(exp_set)>0:
         first = exp_set.pop()
