@@ -9,14 +9,14 @@ print(expenses)
 year = 2020
 
 while (len(expenses)>0):
-    basis = expenses.pop()
+    first = expenses.pop()
     exp_set = set(expenses)
-    howmuch = year - basis
+    rest = year - first
     while len(exp_set)>0:
-        first = exp_set.pop()
+        second = exp_set.pop()
 
-        rest = howmuch - first
+        third = rest - second
 
-        if (rest in exp_set):
-            print(basis, first, rest, first*rest*basis)
+        if (third in exp_set):
+            print(first, second, third, second * third * first)
 
