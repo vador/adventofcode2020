@@ -5,13 +5,19 @@ expenses = lv.list_to_intlist()
 
 print(expenses)
 
-exp_set = set(expenses)
 
-while len(exp_set)>0:
-    first = exp_set.pop()
+year = 2020
 
-    rest = 2020 - first
+for i in range(len(expenses)):
+    basis = expenses[i]
+    exp_set = set(expenses)
+    exp_set.remove(basis)
+    howmuch = year - basis
+    while len(exp_set)>0:
+        first = exp_set.pop()
 
-    if (rest in exp_set):
-        print(first, rest, first*rest)
+        rest = howmuch - first
+
+        if (rest in exp_set):
+            print(basis, first, rest, first*rest*basis)
 
