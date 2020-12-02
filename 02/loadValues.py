@@ -1,6 +1,18 @@
 import re
 
 
+def parse_element(element):
+    (quantity, compound) = element.strip().split(" ")
+    return compound, int(quantity)
+
+
+def parse_rule(element):
+    (quantity_range, letter, password) = element.strip().split(" ")
+    (qmin, qmax) = quantity_range.split("-")
+    letter = letter[0]
+    return (letter, (int(qmin), int(qmax))), password
+
+
 class LoadValues:
     file = './input.txt'
     raw_values = None
@@ -30,49 +42,39 @@ class LoadValues:
         return self.processed_values
 
     def get_3d_coords(self, raw=None):
-        if raw == None:
+        if raw is None:
             raw = self.raw_values
         coords = [tuple(map(int, list(re.findall(r'-?\d+', ln)))) for ln in raw]
         self.processed_values = coords
         return coords
 
-    def parse_element(self, element):
-        (quantity, compound) = element.strip().split(" ")
-        return compound, int(quantity)
-
-    def parse_rule(self, element):
-        (quantity_range, letter, password) = element.strip().split(" ")
-        (qmin, qmax) = quantity_range.split("-")
-        letter = letter[0]
-        return ((letter, (int(qmin), int(qmax))), password)
-
     def get_rules(self, raw=None):
         rules = []
-        if raw == None:
+        if raw is None:
             raw = self.raw_values
         for ln in raw:
-            rules.append(self.parse_rule(ln))
+            rules.append(parse_rule(ln))
         return rules
 
     def get_reactions(self, raw=None):
         reactions = {}
-        if raw == None:
+        if raw is None:
             raw = self.raw_values
         for ln in raw:
             parse = ln.split(" =>")
-            components = [self.parse_element(element) for element in parse[0].split(",")]
-            (result, qr) = self.parse_element(parse[1])
+            components = [parse_element(element) for element in parse[0].split(",")]
+            (result, qr) = parse_element(parse[1])
             reactions[result] = ((result, qr), components)
         return reactions
 
     def get_digit_list(self, raw=None):
-        if raw == None:
+        if raw is None:
             raw = self.raw_values
         tmp = str(raw[0]).strip()
         return [int(i) for i in list(tmp)]
 
     def strip_lines(self, raw=None):
-        if raw == None:
+        if raw is None:
             raw = self.raw_values
         tmp = [line.strip() for line in raw]
         self.processed_values = tmp
