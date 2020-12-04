@@ -1,5 +1,7 @@
+import logging
 import re
 
+logger = logging.getLogger(__name__)
 
 class Passport:
     fields = None
@@ -11,6 +13,7 @@ class Passport:
 
     def set_fields(self, fields):
         self.fields = fields
+        logger.debug("Creating passport :" + str(self.fields))
 
     def isvalid_passport(self):
         res = self.are_compulsory_keys_present()
@@ -26,6 +29,7 @@ class Passport:
         return res
 
     def are_passportkeys_valid(self):
+        pass_keys = ('byr', 'iyr', 'eyr', 'ecl', 'pid', 'hgt', 'hcl')
         res = True
         byr = int(self.fields['byr'])
         iyr = int(self.fields['iyr'])
@@ -34,13 +38,16 @@ class Passport:
         pid = self.fields['pid']
         hgt = self.fields['hgt']
         hcl = self.fields['hcl']
-        res = Passport.validate_byr(byr) & \
-              Passport.validate_iyr(iyr) & \
-              Passport.validate_eyr(eyr) & \
-              Passport.validate_ecl(ecl) & \
-              Passport.validate_pid(pid) & \
-              Passport.validate_hgt(hgt) & \
-              Passport.validate_hcl(hcl)
+        detail = {'byr': Passport.validate_byr(byr),
+                  'iyr': Passport.validate_iyr(iyr),
+                  'eyr': Passport.validate_eyr(eyr),
+                  'ecl': Passport.validate_ecl(ecl),
+                  'pid': Passport.validate_pid(pid),
+                  'hgt': Passport.validate_hgt(hgt),
+                  'hcl': Passport.validate_hcl(hcl)}
+        res = all(detail.values())
+        logger.debug("Validation :" + str(res) + str(detail))
+
         return res
 
     @staticmethod
