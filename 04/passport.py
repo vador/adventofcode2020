@@ -13,12 +13,16 @@ class Passport:
         self.fields = fields
 
     def isvalid_passport(self):
+        res = self.are_compulsory_keys_present()
+        if res:
+            res = self.are_passportkeys_valid()
+        return res
+
+    def are_compulsory_keys_present(self):
+        res = True
         for k in self.compulsory_keys:
             if k not in self.fields.keys():
-                return False
-        res = self.are_passportkeys_valid()
-        if res == True:
-            print (self.fields['pid'])
+                res = False
         return res
 
     def are_passportkeys_valid(self):
@@ -30,13 +34,13 @@ class Passport:
         pid = self.fields['pid']
         hgt = self.fields['hgt']
         hcl = self.fields['hcl']
-        res = self.validate_byr(byr) & \
-              self.validate_iyr(iyr) & \
-              self.validate_eyr(eyr) & \
-              self.validate_ecl(ecl) & \
-              self.validate_pid(pid) & \
-              self.validate_hgt(hgt) & \
-              self.validate_hcl(hcl)
+        res = Passport.validate_byr(byr) & \
+              Passport.validate_iyr(iyr) & \
+              Passport.validate_eyr(eyr) & \
+              Passport.validate_ecl(ecl) & \
+              Passport.validate_pid(pid) & \
+              Passport.validate_hgt(hgt) & \
+              Passport.validate_hcl(hcl)
         return res
 
     @staticmethod

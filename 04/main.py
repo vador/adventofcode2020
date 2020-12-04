@@ -5,14 +5,17 @@ lv = LoadValues()
 lv.strip_lines()
 passports = (lv.passportlist_parse())
 
-cnt = 0
+cntstar1 = 0
+cntstar2 = 0
+
 for passportfields in passports:
     passport = Passport()
     passport.set_fields(passportfields)
-    res = passport.isvalid_passport()
-    if res:
-        cnt += 1
+    if passport.are_compulsory_keys_present():
+        cntstar1 += 1
+    if passport.isvalid_passport():
+        cntstar2 += 1
 
-print(cnt)
+print(cntstar1, cntstar2)
 
 ##
