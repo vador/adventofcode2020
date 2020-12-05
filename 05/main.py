@@ -44,13 +44,18 @@ def main():
     logging.info('Started')
     lv = LoadValues()
     lv.strip_lines()
-    maxid = 0
-    for boardingpass in lv.processed_values:
-        curid = find_seat(boardingpass)
-        if curid > maxid:
-            maxid = curid
 
+    idlist = [find_seat(boardingpass) for boardingpass in lv.processed_values]
+    maxid = max(idlist)
     print("Star1 :", maxid)
+    idlist.sort()
+    minid = min(idlist)
+    missing_values = []
+
+    for idvalue in range(minid, maxid):
+        if idvalue not in idlist:
+            missing_values.append(idvalue)
+    print("Star2 :", missing_values)
 
     logging.info('Finished')
 
