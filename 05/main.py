@@ -39,6 +39,17 @@ def find_seat(binary_part):
     return seat
 
 
+def convert_string_to_seatid(binary_part):
+    cnt = 0
+    idx = 1
+    for char in binary_part:
+        cnt *= 2
+        if char == 'B' or char == 'R':
+            cnt += 1
+
+    return cnt
+
+
 def main():
     logging.basicConfig(level=logging.DEBUG)
     logging.info('Started')
@@ -48,6 +59,7 @@ def main():
     idlist = [find_seat(boardingpass) for boardingpass in lv.processed_values]
     maxid = max(idlist)
     print("Star1 :", maxid)
+
     idlist.sort()
     minid = min(idlist)
     missing_values = []
@@ -56,6 +68,17 @@ def main():
         if idvalue not in idlist:
             missing_values.append(idvalue)
     print("Star2 :", missing_values)
+
+    idlist = [convert_string_to_seatid(boardingpass) for boardingpass in lv.processed_values]
+    maxid = max(idlist)
+    print("Star1bis :", maxid)
+    minid = min(idlist)
+    missing_values = []
+
+    for idvalue in range(minid, maxid):
+        if idvalue not in idlist:
+            missing_values.append(idvalue)
+    print("Star2bis :", missing_values)
 
     logging.info('Finished')
 
