@@ -26,9 +26,9 @@ def list_questions_for_group_intersection(group):
 def main():
     logging.basicConfig(level=logging.INFO)
     logging.info('Started')
-    lv = LoadValues()
-    lv.strip_lines()
-    groups = lv.get_groups()
+    lv = LoadValues(groups=True)
+
+    groups = [line for line in lv.raw_values]
     logging.debug(groups)
     res = [(list_questions_for_group_union(group)) for group in groups]
     cnt = sum(res)

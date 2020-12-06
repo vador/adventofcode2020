@@ -27,18 +27,22 @@ class LoadValues:
     raw_values = None
     processed_values = None
 
-    def __init__(self, data=None, file=True):
+    def __init__(self, data=None, file=True, groups=False):
         if file:
             if data is not None:
                 file_name = data
             else:
                 file_name = self.file
-            with open(file_name) as f:
-                self.raw_values = list(f)
+            if groups:
+                with open(file_name) as f:
+                    self.raw_values = [line.split('\n') for line in f.read().strip().split("\n\n")]
+            else:
+                with open(file_name) as f:
+                    self.raw_values = list(f)
         else:
             self.raw_values = list(data)
 
-    def get_groups(self, raw=None):
+    def get_groups_from_lines(self, raw=None):
         if raw == None:
             raw = self.raw_values
         raw = self.strip_lines(raw)
