@@ -1,5 +1,5 @@
+import cProfile
 import logging
-
 from queue import Queue
 
 from loadValues import LoadValues
@@ -91,9 +91,13 @@ class Maze:
 
 
 def main():
-    logging.basicConfig(level=logging.INFO)
+    pr = cProfile.Profile()
+
+    logging.basicConfig(level=logging.DEBUG)
     graph_logger_maze.setLevel(logging.INFO)
     logging.info('Started')
+    pr.enable()
+
     lv = LoadValues()
     lv.strip_lines()
     my_maze = Maze()
@@ -106,8 +110,10 @@ def main():
     distances = my_graph.bfs((0, 0))
     dist_list = distances.items()
     print(sorted(dist_list, key=lambda dist: dist[1]))
-    logging.info('Finished')
+    pr.disable()
 
+    logging.info('Finished')
+    pr.print_stats()
 
 if __name__ == '__main__':
     logging.getLogger(__name__)
