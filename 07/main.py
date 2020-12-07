@@ -59,18 +59,27 @@ def count_ascendants(bag, ascendants):
             cnt += count_ascendants(asc, ascendants)
     return cnt
 
+def count_descendants(bag, descendants):
+    cnt = 1
+    for (des, nb) in descendants[bag]:
+        cntdes = count_descendants(des, descendants)
+        cnt += int(nb) * cntdes
+        logging.debug("des:" + str((des, nb, cntdes)))
+    if cnt == 0:
+        cnt = 1
+    return cnt
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
     logging.info('Started')
-    lv = LoadValues()
+    lv = LoadValues("test.txt")
     lines = lv.strip_lines()
     graph = build_graph(lines)
     print(graph)
     cnt = count_ascendants(('shiny', 'gold'), graph[0])
     print("Star 1 : ", len(set(cnt)))
-
-    print("Star 2 : ", cnt)
+    cnt = count_descendants(('shiny', 'gold'), graph[1])
+    print("Star 2 : ", cnt - 1)
 
     logging.info('Finished')
 
