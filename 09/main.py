@@ -21,17 +21,17 @@ def is_contiguous_ok(number, pos, list):
     while acc < number:
         acc += list[cur_pos]
         if acc == number:
-            return (True, pos, cur_pos)
+            return True, pos, cur_pos
         cur_pos += 1
-    return (False, None, None)
+    return False, None, None
 
 
 def find_contiguous(number, list):
     for i in range(len(list)):
         (res, start, end) = is_contiguous_ok(number, i, list)
         if res == True:
-            return (start, end)
-    return (None, None)
+            return start, end + 1
+    return None, None
 
 
 def main():
@@ -45,7 +45,6 @@ def main():
     for i in range(len(numbers) - preamble - 1):
         number = numbers[i + preamble]
         candidates = numbers[i:i + preamble]
-        logging.debug(len(candidates))
         res = is_sum(number, candidates)
         if not res:
             break
@@ -53,9 +52,9 @@ def main():
 
     (start, end) = find_contiguous(number, numbers)
     logging.debug((start, end))
-    logging.debug(numbers[start:end + 1])
-    min_val = min(numbers[start:end + 1])
-    max_val = max(numbers[start:end + 1])
+    logging.debug(numbers[start:end])
+    min_val = min(numbers[start:end])
+    max_val = max(numbers[start:end])
 
     print("Star 2 : ", min_val + max_val)
 
