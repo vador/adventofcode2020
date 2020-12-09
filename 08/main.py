@@ -2,42 +2,7 @@ import logging
 import re
 
 from loadValues import LoadValues
-
-
-class Program:
-    program = None
-    acc = 0
-    ip = 0
-    max_instr = 0
-
-    def __init__(self, instructions):
-        self.program = instructions
-        self.acc = 0
-        self.ip = 0
-        self.max_instr = len(instructions)
-
-    def step(self):
-        (op, val) = self.program[self.ip]
-        if op == 'nop':
-            self.ip += 1
-        elif op == 'acc':
-            self.acc += val
-            self.ip += 1
-        elif op == 'jmp':
-            self.ip += val
-        else:
-            loggin.debug("Wrong op:" + op)
-        return (self.ip, self.acc)
-
-    def does_terminate(self):
-        visited_addr = set()
-        cur_ip = 0
-        while cur_ip not in visited_addr:
-            if cur_ip >= self.max_instr:
-                return True, cur_ip, acc
-            visited_addr.add(cur_ip)
-            (cur_ip, acc) = self.step()
-        return (False, cur_ip, acc)
+from program import Program
 
 
 def get_instructions(lines):
@@ -57,8 +22,8 @@ def main():
 
     instr = get_instructions(lines)
     prog = Program(instr)
-    res = prog.does_terminate()
-    print("Star 1 : ", res[2])
+    (_, ip, acc) = prog.does_terminate()
+    print("Star 1 : ", acc)
 
     finished = None
     for (i, cur_instr) in enumerate(instr):
@@ -71,8 +36,9 @@ def main():
             (res, ip, acc) = Program(instr2).does_terminate()
             if res:
                 finished = (ip, acc)
+                break
 
-    print("Star 2 : ", finished)
+    print("Star 2 : ", acc)
 
     logging.info('Finished')
 
