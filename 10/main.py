@@ -4,34 +4,25 @@ import cProfile
 
 from loadValues import LoadValues
 
-path_store = {}
+path_store_list = {}
 
 
-def build_adapters_graph(adapters):
-    graph = {}
-    for (i, adapter) in enumerate(adapters[:-1]):
-        graph[adapter] = [adapters[i + 1]]
-    for (i, adapter) in enumerate(adapters[:-2]):
-        if adapters[i + 2] - adapter <= 3:
-            graph[adapter].append(adapters[i + 2])
-    for (i, adapter) in enumerate(adapters[:-3]):
-        if adapters[i + 3] - adapter <= 3:
-            graph[adapter].append(adapters[i + 3])
-    logging.debug(graph)
-    return graph
-
-
-def count_paths(start, end, graph):
+def count_paths_list(start, end, adapters):
     logging.debug((start, end))
-    if (start, end) in path_store:
-        return path_store[(start, end)]
+    if (start, end) in path_store_list:
+        return path_store_list[(start, end)]
     nb = 0
-    nodes = graph[start]
-    if end in nodes:
+
+    if start + 1 == end:
         return 1
-    for next in nodes:
-        nb += count_paths(next, end, graph)
-    path_store[(start, end)] = nb
+    else:
+        nb += count_paths_list(start + 1, end, adapters)
+        if start + 2 <= end and adapters[start + 2] - adapters[start] <= 3:
+            nb += count_paths_list(start + 2, end, adapters)
+        if start + 3 <= end and adapters[start + 3] - adapters[start] <= 3:
+            nb += count_paths_list(start + 3, end, adapters)
+
+    path_store_list[(start, end)] = nb
     return nb
 
 def main():
@@ -51,10 +42,10 @@ def main():
     logging.debug((one, three, one * three))
     print("Star 1 : ", one * three)
 
-    graph = build_adapters_graph(adapters)
-    number = count_paths(0, max(adapters), graph)
+    pr.enable()
+    number = count_paths_list(0, len(adapters) - 1, adapters)
     print("Star 2 : ", number)
-
+    pr.disable()
     logging.info('Finished')
 
 
@@ -63,8 +54,8 @@ if __name__ == '__main__':
     pr = cProfile.Profile()
     logging.basicConfig(level=logging.INFO)
     logging.info('Started')
-    pr.enable()
+
     main()
-    pr.disable()
+
     logging.info('Finished')
     pr.print_stats()
