@@ -1,3 +1,6 @@
+import logging
+
+
 class Program:
     program = None
     acc = None

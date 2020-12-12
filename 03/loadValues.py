@@ -30,13 +30,13 @@ class LoadValues:
             self.raw_values = list(data)
 
     def list_to_intlist(self, raw=None):
-        if raw == None:
+        if raw is None:
             raw = self.raw_values
         self.processed_values = [int(val) for val in raw]
         return self.processed_values
 
     def comma_list_to_intlist(self, raw=None):
-        if raw == None:
+        if raw is None:
             raw = self.raw_values
         self.processed_values = raw[0].split(",")
         return self.processed_values

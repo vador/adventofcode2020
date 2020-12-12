@@ -22,7 +22,7 @@ class Graph:
     def get_cell(self, pos):
         (r, c) = pos
         (rmin, cmin) = (0, 0)
-        ((rmax, cmax)) = (self.maze.height, self.maze.width)
+        (rmax, cmax) = (self.maze.height, self.maze.width)
         if (rmin <= r < rmax) and (cmin <= c < cmax):
             return self.maze.maze[r][c]
         return None
@@ -69,7 +69,7 @@ class Maze:
         neighb_list = []
         (x, y) = pos
         (xmin, ymin) = (0, 0)
-        ((xmax, ymax)) = (self.height, self.width)
+        (xmax, ymax) = (self.height, self.width)
         self.logger.debug("Neighbours for " + str(pos))
         for (dx, dy) in neighbours:
             if (xmin <= (x + dx) < xmax) and (ymin <= (y + dy) < ymax):

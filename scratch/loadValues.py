@@ -39,7 +39,7 @@ class LoadValues:
             self.raw_values = list(data)
 
     def get_groups(self, raw=None):
-        if raw == None:
+        if raw is None:
             raw = self.raw_values
         raw = self.strip_lines(raw)
         groups = []
@@ -56,7 +56,7 @@ class LoadValues:
         return groups
 
     def passportlist_parse(self, raw=None):
-        if raw == None:
+        if raw is None:
             raw = self.raw_values
         raw = self.strip_lines(raw)
         passportlist = []
@@ -76,13 +76,13 @@ class LoadValues:
         return passportlistkv
 
     def list_to_intlist(self, raw=None):
-        if raw == None:
+        if raw is None:
             raw = self.raw_values
         self.processed_values = [int(val) for val in raw]
         return self.processed_values
 
     def comma_list_to_intlist(self, raw=None):
-        if raw == None:
+        if raw is None:
             raw = self.raw_values
         self.processed_values = raw[0].split(",")
         return self.processed_values

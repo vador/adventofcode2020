@@ -79,12 +79,12 @@ class ShipW:
             wy += qty
 
         alpha = 0
-        n = qty // 90
+        number_quarter_turn = qty // 90
         if action == 'R':
-            alpha = n % 4
+            alpha = number_quarter_turn % 4
         elif action == 'L':
-            n = qty // 90
-            alpha = -n % 4
+            number_quarter_turn = qty // 90
+            alpha = -number_quarter_turn % 4
         if alpha == 1:
             (wx, wy) = (-wy, wx)
         elif alpha == 2:
@@ -102,7 +102,6 @@ def main():
     lv = LoadValues()
     action_list = [(line[0], line[1:]) for line in lv.strip_lines()]
     logging.debug(action_list)
-    pr.enable()
     ship = Ship()
     for action in action_list:
         pass
@@ -119,7 +118,6 @@ def main():
     number = abs(x) + abs(y)
 
     print("Star 2 : ", number)
-    pr.disable()
     logging.info('Finished')
 
 
@@ -128,8 +126,10 @@ if __name__ == '__main__':
     pr = cProfile.Profile()
     logging.basicConfig(level=logging.DEBUG)
     logging.info('Started')
+    pr.enable()
 
     main()
+    pr.disable()
 
     logging.info('Finished')
     # pr.print_stats()
