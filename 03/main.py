@@ -12,6 +12,7 @@ def convertw(y):
     (div, mod) = divmod(y, width)
     return mod
 
+
 def trees_for_slope(slopex, slopey):
     (posx, posy) = (0, 0)
     cnt = 0

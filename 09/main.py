@@ -29,7 +29,7 @@ def is_contiguous_ok(number, pos, list):
 def find_contiguous(number, list):
     for i in range(len(list)):
         (res, start, end) = is_contiguous_ok(number, i, list)
-        if res == True:
+        if res is True:
             return start, end + 1
     return None, None
 

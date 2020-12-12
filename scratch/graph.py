@@ -115,6 +115,7 @@ def main():
     logging.info('Finished')
     pr.print_stats()
 
+
 if __name__ == '__main__':
     logging.getLogger(__name__)
 

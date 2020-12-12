@@ -28,6 +28,6 @@ for (rule, password) in database:
         cnt1 += 1
     if res2:
         cnt2 += 1
-    print (rule, password, (res1, res2))
+    print(rule, password, (res1, res2))
 
 print("Nb :", (cnt1, cnt2))

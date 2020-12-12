@@ -25,6 +25,7 @@ def count_paths_list(start, end, adapters):
     path_store_list[(start, end)] = nb
     return nb
 
+
 def main():
     lv = LoadValues()
     numbers = lv.list_to_intlist()

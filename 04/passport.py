@@ -3,6 +3,7 @@ import re
 
 logger = logging.getLogger(__name__)
 
+
 class Passport:
     fields = None
     passport_keys = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid', 'cid']
@@ -30,7 +31,6 @@ class Passport:
 
     def are_passportkeys_valid(self):
         pass_keys = ('byr', 'iyr', 'eyr', 'ecl', 'pid', 'hgt', 'hcl')
-        res = True
         byr = int(self.fields['byr'])
         iyr = int(self.fields['iyr'])
         eyr = int(self.fields['eyr'])

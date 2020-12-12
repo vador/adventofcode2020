@@ -59,6 +59,7 @@ def count_ascendants(bag, ascendants):
             cnt += count_ascendants(asc, ascendants)
     return cnt
 
+
 def count_descendants(bag, descendants):
     cnt = 1
     for (des, nb) in descendants[bag]:
@@ -68,6 +69,7 @@ def count_descendants(bag, descendants):
     if cnt == 0:
         cnt = 1
     return cnt
+
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
