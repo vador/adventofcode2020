@@ -20,7 +20,7 @@ class Program:
         elif op == 'jmp':
             self.ip += val
         else:
-            loggin.debug("Wrong op:" + op)
+            logging.debug("Wrong op:" + op)
         return self.ip, self.acc
 
     def does_terminate(self):
