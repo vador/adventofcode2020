@@ -18,6 +18,7 @@ def chinese_remainder(n, a):
     return sum % prod
 
 
+# extended Euclides
 def mul_inv(a, b):
     b0 = b
     x0, x1 = 0, 1
