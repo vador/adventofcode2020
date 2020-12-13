@@ -5,7 +5,6 @@ import math
 
 from loadValues import LoadValues
 
-# Python 3.6
 from functools import reduce
 
 
