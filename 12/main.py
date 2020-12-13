@@ -58,7 +58,7 @@ class ShipW:
 
     def __init__(self):
         self.pos = (0, 0)
-        self.wpos = (10, -1)
+        self.wpos = 10, -1
         self.direction = 0
 
     def act(self, move):
@@ -105,7 +105,7 @@ def main():
     ship = Ship()
     for action in action_list:
         pass
-        # ship.act(action)
+        ship.act(action)
     (x, y) = ship.pos
     number = abs(x) + abs(y)
 
