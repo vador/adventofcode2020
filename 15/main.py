@@ -60,4 +60,4 @@ if __name__ == '__main__':
     pr.disable()
 
     logging.info('Finished')
-    # pr.print_stats()
+    pr.print_stats()
