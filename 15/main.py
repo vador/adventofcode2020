@@ -13,15 +13,15 @@ def numbers_sequence(start, end_round):
         spoken[val] = i + 1
         last_spoken = val
     first_time = True
-    rnd = i + 2
+    rnd = i + 1
     logging.debug(spoken)
-    while rnd <= end_round:
+    while rnd < end_round:
         if last_spoken in spoken:
             last_time = spoken[last_spoken]
-            spoken[last_spoken] = rnd - 1
-            last_spoken = rnd - 1 - last_time
+            spoken[last_spoken] = rnd
+            last_spoken = rnd - last_time
         else:
-            spoken[last_spoken] = rnd - 1
+            spoken[last_spoken] = rnd
             last_spoken = 0
         if (not (rnd % 1000000) or (end_round - rnd) < 30):
             logging.debug((rnd, last_spoken))
@@ -38,7 +38,7 @@ def main():
 
     start = [0, 3, 6]
     start = [3, 1, 2]
-    start = [1, 0, 18, 10, 19, 6]  # Real Input
+    # start = [1, 0, 18, 10, 19, 6]  # Real Input
     number = numbers_sequence(start, 2020)
 
     print("Star 1 : ", number)
