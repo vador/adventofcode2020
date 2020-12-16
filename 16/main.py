@@ -26,8 +26,7 @@ class TicketValidator:
 
     def is_value_valid_any(self, val):
         for field in self.fields:
-            (mina, maxa), (minb, maxb) = self.fields[field]
-            if (mina <= val <= maxa) or (minb <= val <= maxb):
+            if self.is_value_valid_one_fields(field, val):
                 return True
         return False
 
@@ -38,6 +37,13 @@ class TicketValidator:
                 invalid += val
         return (invalid == 0, invalid)
 
+    def is_value_valid_one_fields(self, field_name, val):
+        (mina, maxa), (minb, maxb) = self.fields[field_name]
+        return (mina <= val <= maxa) or (minb <= val <= maxb)
+
+    def get_valid_fields_for_value(self, val):
+        return [field_name for field_name in self.fields if self.is_value_valid_one_fields(field_name, val)]
+
 
 def main():
     number = 0
@@ -47,7 +53,7 @@ def main():
     tv = TicketValidator()
     tv.set_fields(lv.raw_values[0])
     ticket_list = lv.raw_values[2][1:]
-
+    my_ticket = [int(val) for val in str(lv.raw_values[1][1:][0]).split(',')]
     logging.debug(ticket_list)
     valid_tickets = []
     for ticket in ticket_list:
@@ -60,6 +66,32 @@ def main():
 
     print("Star 1 : ", number)
 
+    nb_fields = len(valid_tickets[0])
+    field_val = 0
+
+    valid_fields = [set(tv.fields.keys()) for i in range(nb_fields)]
+
+    for ticket in valid_tickets:
+        for (i, val) in enumerate(ticket):
+            res = set(tv.get_valid_fields_for_value(val))
+            valid_fields[i] = valid_fields[i].intersection(res)
+    known_fields_val = {}
+    known_fields_set = set()
+    valid_fields = [(pos, valid) for (pos, valid) in enumerate(valid_fields)]
+    valid_fields.sort(key=lambda val: len(val[1]), reverse=True)
+    while len(valid_fields) > 0:
+        cur_field = valid_fields.pop()
+        (col, possible) = cur_field
+        res = possible.difference(known_fields_set)
+        res = res.pop()
+        known_fields_val[res] = col
+        known_fields_set.add(res)
+
+    # calculate 2nd star
+    number = 1
+    for k in known_fields_val:
+        if k[:9] == 'departure':
+            number *= my_ticket[known_fields_val[k]]
     print("Star 2 : ", number)
     logging.info('Finished')
 
