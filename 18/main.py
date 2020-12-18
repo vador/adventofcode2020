@@ -35,6 +35,8 @@ def shunting(expression):
         elif oper == '+':
             stack.append(oper)
         elif oper == '*':
+            while len(stack) > 0 and stack[-1] == '+':
+                output.append(stack.pop())
             stack.append(oper)
         elif oper == ')':
             stack.append(oper)
@@ -59,8 +61,8 @@ def main():
     lines = lv.strip_lines()
 
     expr = "1 + 2 * 3 + 4 * 5 + 6"
-    # expr = "1 + ( 2 * 3 ) + ( 4 * ( 5 + 6 ) )"
-    # expr = "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"
+    expr = "1 + ( 2 * 3 ) + ( 4 * ( 5 + 6 ) )"
+    expr = "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"
 
     expr = expr.replace('(', '( ')
     expr = expr.replace(')', ' )')
@@ -69,7 +71,9 @@ def main():
     logging.debug(("r1:", r1))
     r2 = eval_rpn(r1)
     logging.debug(("r2:", r2))
-    # return
+
+    r3 = eval_rpn(['6', '5', '+', '4', '3', '+', '*', '2', '1', '+', '*'])
+    logging.debug(("r3:", r3))
 
     acc = 0
     for line in lines:
