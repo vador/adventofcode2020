@@ -14,6 +14,7 @@ for x in [-1, 0, 1]:
 NEIGH = set(NEIGH)
 NEIGH.discard((0, 0, 0, 0))
 
+neigh_collection = {}
 
 class Coord:
     pos = None
@@ -29,9 +30,12 @@ class Coord:
         return Coord((x + dx, y + dy, z + dz, w + dw))
 
     def get_neigh(self):
+        if self in neigh_collection:
+            return neigh_collection[self]
         neigh = set()
         for coord in self.NEIGH:
             neigh.add(self.add(Coord(coord)))
+        neigh_collection[self] = neigh
         return neigh
 
     def __eq__(self, other):
@@ -101,7 +105,7 @@ def main():
 ##
 if __name__ == '__main__':
     pr = cProfile.Profile()
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     logging.info('Started')
     pr.enable()
 
@@ -109,4 +113,4 @@ if __name__ == '__main__':
     pr.disable()
 
     logging.info('Finished')
-    # pr.print_stats()
+    pr.print_stats()
