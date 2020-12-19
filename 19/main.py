@@ -35,23 +35,29 @@ class RuleSet:
     def add(self, rule):
         self.rules[rule.ruleId] = rule
 
+    def build_rules(self, rules):
+        for rule in rules:
+            tmpRule = Rule(rule)
+            logging.debug(tmpRule)
+            self.add(tmpRule)
+
     def build_valid(self, message, node):
         currentRule = self.rules[node]
         if currentRule.isLeaf:
-            if message[0] == currentRule.value:
-                return {1}  # match at position 1
+            if message and message[0] == currentRule.value:
+                return {1}  # match one position 1
             else:
-                return set()
+                return set()  # no match for this rule
         matches = set()
         for val in currentRule.value:  # we have one or 2 possibilities
-
             tmpMatch = {0}  # anchor
             for nextRule in val:
                 newMatch = set()
                 for pos in tmpMatch:
-                    newMatch |= {pos + m for m in self.build_valid(message[pos:], nextRule)}
+                    submatches = self.build_valid(message[pos:], nextRule)
+                    newMatch.update({pos + m for m in submatches})
                 tmpMatch = newMatch
-            matches |= tmpMatch
+            matches.update(tmpMatch)
         return matches
 
 
@@ -64,10 +70,8 @@ def main():
     rules, messages = lv.raw_values
     RS = RuleSet()
 
-    for line in lv.raw_values[0]:
-        tmpRule = Rule(line)
-        logging.debug(tmpRule)
-        RS.add(tmpRule)
+    RS.build_rules(rules)
+
     logging.debug(RS.rules)
 
     logging.debug([RS.build_valid(m, 0) for m in messages])
@@ -75,10 +79,24 @@ def main():
     match = [len(m) in RS.build_valid(m, 0) for m in messages]
 
     number = sum(match)
-    # CDEBUG:root:[{24}, set(), {24}, {24}, set(), set(), {24}, {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, set(), set(), {24}, set(), {24}, set(), {24}, set(), {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), set(), {24}, set(), set(), set(), {24}, set(), set(), {24}, set(), {24}, {24}, set(), set(), {24}, set(), {24}, {24}, set(), {24}, {24}, set(), {24}, set(), {24}, set(), {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, set(), set(), set(), set(), {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, set(), {24}, set(), set(), {24}, {24}, set(), set(), {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, set(), set(), set(), set(), {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, set(), {24}, set(), set(), set(), {24}, set(), set(), {24}, {24}, {24}, set(), {24}, set(), set(), {24}, set(), set(), {24}, set(), set(), {24}, set(), set(), {24}, set(), set(), set(), {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, set(), set(), {24}, set(), set(), set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, set(), set(), {24}, {24}, {24}, set(), {24}, {24}, set(), set(), {24}, {24}, set(), set(), {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, set(), set(), {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, set(), {24}, {24}, {24}, set(), set(), {24}, {24}, {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, {24}, set(), {24}, {24}, {24}, set(), {24}, set(), set(), set(), set(), {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, set(), {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, {24}, {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, set(), set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, set(), set(), {24}, {24}, set(), {24}, {24}, set(), set(), set(), {24}, set(), set(), set(), {24}, set(), set(), {24}, {24}, set(), {24}, set(), set(), set(), {24}, set(), {24}, {24}, set(), {24}, set(), set(), {24}, {24}, set(), set(), {24}, {24}, {24}, set(), set(), set(), {24}, set(), {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), set(), {24}, {24}, set(), {24}, {24}, {24}, {24}, set(), set(), {24}, {24}, {24}, set(), set(), {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, set(), {24}, {24}, {24}, set(), set(), set(), set(), set()]
-    # MDEBUG:root:[{24}, set(), {24}, {24}, set(), set(), {24}, {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, set(), set(), {24}, set(), {24}, set(), {24}, set(), {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), set(), {24}, set(), set(), set(), {24}, set(), set(), {24}, set(), {24}, {24}, set(), set(), {24}, set(), {24}, {24}, set(), {24}, {24}, set(), {24}, set(), {24}, set(), {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, set(), set(), set(), set(), {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, set(), {24}, set(), set(), {24}, {24}, set(), set(), {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, set(), set(), set(), set(), {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, set(), {24}, set(), set(), set(), {24}, set(), set(), {24}, {24}, {24}, set(), {24}, set(), set(), {24}, set(), set(), {24}, set(), set(), {24}, set(), set(), {24}, set(), set(), set(), {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, set(), set(), {24}, set(), set(), set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, set(), set(), {24}, {24}, {24}, set(), {24}, {24}, set(), set(), {24}, {24}, set(), set(), {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, set(), set(), {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, set(), {24}, {24}, {24}, set(), set(), {24}, {24}, {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, {24}, set(), {24}, {24}, {24}, set(), {24}, set(), set(), set(), set(), {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, {24}, set(), {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), {24}, {24}, {24}, {24}, {24}, set(), {24}, set(), set(), {24}, {24}, set(), set(), {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, {24}, {24}, set(), {24}, {24}, set(), set(), {24}, {24}, set(), {24}, {24}, set(), set(), set(), {24}, set(), set(), set(), {24}, set(), set(), {24}, {24}, set(), {24}, set(), set(), set(), {24}, set(), {24}, {24}, set(), {24}, set(), set(), {24}, {24}, set(), set(), {24}, {24}, {24}, set(), set(), set(), {24}, set(), {24}, set(), {24}, {24}, {24}, {24}, {24}, {24}, set(), set(), set(), {24}, {24}, set(), {24}, {24}, {24}, {24}, set(), set(), {24}, {24}, {24}, set(), set(), {24}, {24}, {24}, {24}, {24}, set(), {24}, {24}, set(), {24}, {24}, {24}, set(), set(), set(), set(), set()]
 
     print("Star 1 : ", number)
+
+    rules.append("8: 42 | 42 8")
+    rules.append("11: 42 31 | 42 11 31")
+    print(rules)
+
+    RS = RuleSet()
+
+    RS.build_rules(rules)
+
+    logging.debug(RS.rules)
+
+    logging.debug([RS.build_valid(m, 0) for m in messages])
+
+    match = [len(m) in RS.build_valid(m, 0) for m in messages]
+
+    number = sum(match)
 
     print("Star 2 : ", number)
     logging.info('Finished')
