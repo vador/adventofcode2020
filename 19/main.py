@@ -44,12 +44,12 @@ class RuleSet:
     def build_valid(self, message, node):
         currentRule = self.rules[node]
         if currentRule.isLeaf:
-            if message and message[0] == currentRule.value:
+            if message and message[0] == currentRule.value:  # "if message" necessary if all message already consumed
                 return {1}  # match one position 1
             else:
                 return set()  # no match for this rule
         matches = set()
-        for val in currentRule.value:  # we have one or 2 possibilities
+        for val in currentRule.value:  # we have 1,2 or 3 rules to match sequentially
             tmpMatch = {0}  # anchor
             for nextRule in val:
                 newMatch = set()
@@ -65,47 +65,39 @@ def main():
     number = 0
 
     lv = LoadValues("input.txt", groups=True)
-    print(lv.raw_values)
 
     rules, messages = lv.raw_values
+
     RS = RuleSet()
-
     RS.build_rules(rules)
-
     logging.debug(RS.rules)
 
-    logging.debug([RS.build_valid(m, 0) for m in messages])
-
-    match = [len(m) in RS.build_valid(m, 0) for m in messages]
-
+    res = [(len(m), RS.build_valid(m, 0)) for m in messages]
+    logging.debug(res)
+    match = [mlen in mset for (mlen, mset) in res]
     number = sum(match)
 
     print("Star 1 : ", number)
 
     rules.append("8: 42 | 42 8")
     rules.append("11: 42 31 | 42 11 31")
-    print(rules)
 
     RS = RuleSet()
-
     RS.build_rules(rules)
-
     logging.debug(RS.rules)
 
-    logging.debug([RS.build_valid(m, 0) for m in messages])
-
-    match = [len(m) in RS.build_valid(m, 0) for m in messages]
-
+    res = [(len(m), RS.build_valid(m, 0)) for m in messages]
+    logging.debug(res)
+    match = [mlen in mset for (mlen, mset) in res]
     number = sum(match)
 
     print("Star 2 : ", number)
-    logging.info('Finished')
 
 
 ##
 if __name__ == '__main__':
     pr = cProfile.Profile()
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     logging.info('Started')
     pr.enable()
 
