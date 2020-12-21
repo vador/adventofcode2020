@@ -4,72 +4,8 @@ import cProfile
 import math
 from collections import namedtuple
 from loadValues import LoadValues
+from tile import Tile, TileList
 
-DIRECTIONS = ['U', 'R', 'D', 'L']
-
-Side = namedtuple('Side', ['tile', 'direction', 'flipped', 'side'])
-
-
-class Tile:
-    tildeId = None
-    tile = None
-    rotation = None
-    flipped = None
-
-    def __init__(self, tile):
-        tile_id = tile[0][5:-1]
-        self.tildeId = int(tile_id)
-        self.tile = tile[1:].copy()
-        self.flipped = False
-        self.rotation = 0
-
-    def get_all_sides(self):
-        tile = self.tile
-        up = tile[0]
-        down = tile[-1][::-1]
-        left = []
-        right = []
-        for line in tile:
-            left.append(line[0])
-            right.append(line[-1])
-        right = ''.join(right)
-        left = ''.join(left)[::-1]
-        sides = [Side(self.tildeId, i, False, side) for (i, side) in enumerate([up, right, down, left])]
-        sidesRev = [Side(self.tildeId, i, True, side[::-1]) for (i, side) in enumerate([up, left, down, right])]
-        self.sides = sides + sidesRev
-        return self.sides
-
-    def flip(self):
-        self.flipped = not self.flipped
-
-    def rotate(self, angle):
-        self.rotation = angle
-
-    def get_side(self, direction):
-        if self.flipped:
-            return self.sides[(direction + self.rotation) % 4 + 4]
-        else:
-            return self.sides[(direction + self.rotation) % 4]
-
-
-class TileList:
-    tiles = None
-    all_sides = None
-
-    def __init__(self):
-        self.tiles = {}
-        self.all_sides = {}
-
-    def add_tile(self, tile):
-        self.tiles[tile.tildeId] = tile
-        for side in tile.get_all_sides():
-            if side.side in self.all_sides:
-                self.all_sides[side.side].append(side)
-            else:
-                self.all_sides[side.side] = [side]
-
-    def find_neigh(self, tile, direction):
-        pass
 
 def main():
     number = 0
@@ -96,14 +32,42 @@ def main():
     number = math.prod(corners)
     print("Star 1 : ", number)
 
-    tile1 = TL.tiles[1427]
-    for i in range(4):
-        s1 = tile1.get_side(i)
-        logging.debug(s1)
-    tile1.flip()
-    for i in range(4):
-        s1 = tile1.get_side(i)
-        logging.debug(s1)
+    graph = TL.find_neigh(3079)
+    top_left = 3079
+    logging.debug(top_left)
+    while (top_left, 0) in graph:
+        top_left = graph[(top_left, 0)]
+        logging.debug(top_left)
+
+    while (top_left, 3) in graph:
+        top_left = graph[(top_left, 3)]
+    logging.debug(top_left)
+    cur = top_left
+    lines = [cur]
+    while (cur, 2) in graph:
+        cur = graph[(cur, 2)]
+        lines.append(cur)
+    logging.debug(("lines", lines))
+
+    map = []
+    for line in lines:
+        tmp = [line]
+        cur = line
+        while (cur, 1) in graph:
+            cur = graph[(cur, 1)]
+            tmp.append(cur)
+        map.append(tmp)
+    logging.debug(map)
+
+    tiles_str = []
+    for line in map:
+        tmp = []
+        for tile in line:
+            print(tile)
+            tmp.append(TL.tiles[tile].display_no_border())
+        tmp2 = [a + b + c for (a, b, c) in zip(*tmp)]
+        tiles_str += tmp2
+    print('\n'.join(tiles_str))
 
     print("Star 2 : ", number)
 
