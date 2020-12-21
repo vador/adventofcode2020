@@ -119,17 +119,17 @@ class TileList:
         return graph
 
     def build_map(self):
-        start = self.tiles.keys()[0]
+        start = list(self.tiles.keys())[0]
         graph = self.find_neigh(start)
 
-        top_left = self.tiles[start]
+        top_left = start
         while (top_left, 0) in graph:
             top_left = graph[(top_left, 0)]
             logging.debug(top_left)
 
         while (top_left, 3) in graph:
             top_left = graph[(top_left, 3)]
-        logging.debug(top_left)
+        logging.debug(("top_left", top_left))
         cur = top_left
         lines = [cur]
         while (cur, 2) in graph:
@@ -152,11 +152,10 @@ class TileList:
             tmp = []
             for tile in line:
                 print(tile)
-                tmp.append(TL.tiles[tile].display_no_border())
-            tmp2 = [a + b + c for (a, b, c) in zip(*tmp)]
+                tmp.append(self.tiles[tile].display_no_border())
+            tmp2 = [''.join(elem) for elem in zip(*tmp)]
             tiles_str += tmp2
-        print('\n'.join(tiles_str))
-
+        return tiles_str
 
 class TextMap:
     map = None

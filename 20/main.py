@@ -32,42 +32,8 @@ def main():
     number = math.prod(corners)
     print("Star 1 : ", number)
 
-    graph = TL.find_neigh(3079)
-    top_left = 3079
-    logging.debug(top_left)
-    while (top_left, 0) in graph:
-        top_left = graph[(top_left, 0)]
-        logging.debug(top_left)
-
-    while (top_left, 3) in graph:
-        top_left = graph[(top_left, 3)]
-    logging.debug(top_left)
-    cur = top_left
-    lines = [cur]
-    while (cur, 2) in graph:
-        cur = graph[(cur, 2)]
-        lines.append(cur)
-    logging.debug(("lines", lines))
-
-    map = []
-    for line in lines:
-        tmp = [line]
-        cur = line
-        while (cur, 1) in graph:
-            cur = graph[(cur, 1)]
-            tmp.append(cur)
-        map.append(tmp)
-    logging.debug(map)
-
-    tiles_str = []
-    for line in map:
-        tmp = []
-        for tile in line:
-            print(tile)
-            tmp.append(TL.tiles[tile].display_no_border())
-        tmp2 = [a + b + c for (a, b, c) in zip(*tmp)]
-        tiles_str += tmp2
-    print('\n'.join(tiles_str))
+    tiles_str = TL.build_map()
+    print('\n'.join(tiles_str[::-1]))
 
     print("Star 2 : ", number)
 
@@ -75,7 +41,7 @@ def main():
 ##
 if __name__ == '__main__':
     pr = cProfile.Profile()
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     logging.info('Started')
     pr.enable()
 
