@@ -31,14 +31,12 @@ def main():
                 possib_aller[aller] = set(ingredients)
 
     logging.debug(possib_aller)
-    # logging.debug(ingredients)
     remove_ingr = set()
     for (aller, ingr) in possib_aller.items():
         remove_ingr |= ingr
 
-    # logging.debug(remove_ingr)
     no_aller = all_ingredients - remove_ingr
-    logging.debug(no_aller)
+    logging.debug(no_aller)  # ingredients that cannot contain allergens
 
     cnt = 0
     for line in lines:
@@ -57,11 +55,7 @@ def main():
             to_remove.append(val)
             found.append((aller, val))
             candidate_aller.pop(aller)
-    logging.debug(">>>>>")
-    logging.debug(candidate_aller)
-    logging.debug(to_remove)
-    logging.debug(found)
-    logging.debug(">>>>>")
+
 
     while to_remove:
         cur_ingr = to_remove.pop()
@@ -79,7 +73,7 @@ def main():
         logging.debug(found)
         logging.debug("-------")
 
-    found.sort()
+    found.sort()  # sort by allergen
     logging.debug(found)
     number = ','.join([ingr for (aller, ingr) in found])
 
