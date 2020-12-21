@@ -13,13 +13,15 @@ Side = namedtuple('Side', ['tile', 'direction', 'flipped', 'side'])
 class Tile:
     tildeId = None
     tile = None
-    direction = None
+    rotation = None
     flipped = None
 
     def __init__(self, tile):
         tile_id = tile[0][5:-1]
         self.tildeId = int(tile_id)
         self.tile = tile[1:].copy()
+        self.flipped = False
+        self.rotation = 0
 
     def get_all_sides(self):
         tile = self.tile
@@ -32,9 +34,22 @@ class Tile:
             right.append(line[-1])
         right = ''.join(right)
         left = ''.join(left)[::-1]
-        sides = [Side(self.tildeId, i, False, side) for (i, side) in enumerate([up, left, down, right])]
-        sidesRev = [Side(self.tildeId, i, True, side[::-1]) for (i, side) in enumerate([up, right, down, left])]
-        return sides + sidesRev
+        sides = [Side(self.tildeId, i, False, side) for (i, side) in enumerate([up, right, down, left])]
+        sidesRev = [Side(self.tildeId, i, True, side[::-1]) for (i, side) in enumerate([up, left, down, right])]
+        self.sides = sides + sidesRev
+        return self.sides
+
+    def flip(self):
+        self.flipped = not self.flipped
+
+    def rotate(self, angle):
+        self.rotation = angle
+
+    def get_side(self, direction):
+        if self.flipped:
+            return self.sides[(direction + self.rotation) % 4 + 4]
+        else:
+            return self.sides[(direction + self.rotation) % 4]
 
 
 class TileList:
@@ -53,6 +68,8 @@ class TileList:
             else:
                 self.all_sides[side.side] = [side]
 
+    def find_neigh(self, tile, direction):
+        pass
 
 def main():
     number = 0
@@ -78,6 +95,15 @@ def main():
     logging.debug(corners)
     number = math.prod(corners)
     print("Star 1 : ", number)
+
+    tile1 = TL.tiles[1427]
+    for i in range(4):
+        s1 = tile1.get_side(i)
+        logging.debug(s1)
+    tile1.flip()
+    for i in range(4):
+        s1 = tile1.get_side(i)
+        logging.debug(s1)
 
     print("Star 2 : ", number)
 
