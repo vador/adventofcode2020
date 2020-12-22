@@ -5,12 +5,12 @@ import math
 from collections import namedtuple
 from loadValues import LoadValues
 from tile import Tile, TileList
-
+from seamap import SeaMap
 
 def main():
     number = 0
 
-    lv = LoadValues("test.txt", groups=True)
+    lv = LoadValues("input.txt", groups=True)
 
     lst = set()
     TL = TileList()
@@ -35,6 +35,13 @@ def main():
     tiles_str = TL.build_map()
     print('\n'.join(tiles_str[::-1]))
 
+    sm = SeaMap(tiles_str)
+
+    all_m = sm.rotate_monster()
+
+    for mm in all_m:
+        print(sm.find_monster_in_map(mm))
+    number = sm.roughness()
     print("Star 2 : ", number)
 
 
