@@ -41,7 +41,7 @@ def main():
 ##
 if __name__ == '__main__':
     pr = cProfile.Profile()
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
     logging.info('Started')
     pr.enable()
 
